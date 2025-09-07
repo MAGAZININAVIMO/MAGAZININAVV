@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAGAZINI NAV</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f0f0f0;}
+header{background:#008080;color:#fff;text-align:center;padding:15px;font-size:22px;position:relative;}
+#product-list{max-width:960px;margin:16px auto;display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;padding:0 12px;}
+.product{position:relative;background:#fff;border-radius:8px;padding:0;box-shadow:0 2px 6px rgba(0,0,0,0.06);cursor:pointer;display:flex;flex-direction:column;align-items:center;aspect-ratio:1/1;overflow:hidden;}
+.product img{width:100%;height:100%;object-fit:cover;display:block;}
+.product .info{position:absolute;bottom:0;left:0;width:100%;background: rgba(255,255,255,0.9);color:#000;padding:6px;text-align:center;box-sizing: border-box;}
+.product .info .title{font-weight:600;font-size:14px;}
+.product .info .price{font-weight:600;font-size:13px;margin-top:2px;}
+#product-detail{max-width:600px;margin:16px auto;background:#fff;padding:12px;border-radius:8px;box-shadow:0 3px 12px rgba(0,0,0,0.06);display:none;}
+#product-detail img{width:100%;border-radius:6px;margin-bottom:8px;}
+#back-btn{display:inline-block;margin-bottom:8px;padding:6px 10px;border-radius:6px;border:none;background:#eee;color:#333;cursor:pointer;}
+#detail-links{display:flex;gap:6px;margin-top:6px;}
+#detail-links a{display:inline-block;width:32px;height:32px;}
+#detail-links a img{width:100%;height:100%;}
+#search-input{width:90%;max-width:300px;padding:6px;border-radius:4px;border:1px solid #ccc;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<header>
+MAGAZINI NAV
+<div>
+  <input type="text" id="search-input" placeholder="Номи молро ҷустуҷӯ кунед...">
+</div>
+</header>
+
+<div id="product-list"></div>
+
+<div id="product-detail">
+<button id="back-btn" onclick="closeDetail()">← Бозгашт</button>
+<h2 id="detail-name"></h2>
+<img id="detail-image" src="" alt="" />
+<p id="detail-price"></p>
+<p id="detail-desc"></p>
+<div id="detail-links">
+<a id="detail-whatsapp" href="#" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png"></a>
+<a id="detail-inst" href="#" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"></a>
+<a id="detail-tiktok" href="#" target="_blank"><img src="https://cdn-icons-png.flaticon.com/512/3046/3046121.png"></a>
+</div>
+</div>
+
+<script>
+let products = [];
+const productList = document.getElementById('product-list');
+const detailBox = document.getElementById('product-detail');
+const searchInput = document.getElementById('search-input');
+
+// Бор кардани маҳсулот аз JSON онлайн
+async function loadProducts(){
+  try{
+    const res = await fetch('https://magazininavimo.github.io/MAGAZINNINAV/products.json');
+    products = await res.json();
+    renderProducts();
+  }catch(err){
+    console.error('Маълумот аз JSON бор нашуд', err);
+  }
+}
+
+// Намоиши маҳсулот
+function renderProducts(search=''){
+  productList.innerHTML='';
+  detailBox.style.display='none';
+  products.forEach(p=>{
+    if(search && !p.name.toLowerCase().includes(search)) return;
+    const div=document.createElement('div');
+    div.className='product';
+    div.innerHTML=`
+      <img src="${p.image}" alt="${p.name}">
+      <div class="info">
+        <div class="title">${p.name}</div>
+        <div class="price">${p.price}</div>
+      </div>
+    `;
+    div.onclick=()=>openDetail(p);
+    productList.appendChild(div);
+  });
+}
+
+// Тафсилоти мол
+function openDetail(p){
+  detailBox.style.display='block';
+  document.getElementById('detail-name').textContent=p.name;
+  document.getElementById('detail-price').textContent='Нарх: '+p.price;
+  document.getElementById('detail-desc').textContent=p.desc||'';
+  document.getElementById('detail-image').src=p.image;
+  document.getElementById('detail-whatsapp').href=p.whatsapp||'#';
+  document.getElementById('detail-inst').href=p.inst||'#';
+  document.getElementById('detail-tiktok').href=p.tiktok||'#';
+}
+
+function closeDetail(){detailBox.style.display='none';}
+
+// Ҷустуҷӯ
+searchInput.addEventListener('input', () => {
+  renderProducts(searchInput.value.trim().toLowerCase());
+});
+
+window.onload = loadProducts;
+</script>
+</body>
+</html>

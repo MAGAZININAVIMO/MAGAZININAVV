@@ -1,0 +1,22 @@
+[
+  {
+    "id": "1",
+    "name": "Моли 1",
+    "price": "100 сом",
+    "desc": "Тавсифи мол 1",
+    "image": "https://i.imgur.com/1.jpg",
+    "whatsapp": "https://wa.me/123456789",
+    "inst": "https://instagram.com/example",
+    "tiktok": "https://www.tiktok.com/@example"
+  },
+  {
+    "id": "2",
+    "name": "Моли 2",
+    "price": "200 сом",
+    "desc": "Тавсифи мол 2",
+    "image": "https://i.imgur.com/2.jpg",
+    "whatsapp": "https://wa.me/987654321",
+    "inst": "https://instagram.com/example2",
+    "tiktok": "https://www.tiktok.com/@example2"
+  }
+]
